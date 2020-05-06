@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { ApolloProvider } from "react-apollo";
 import { createHttpLink } from "apollo-link-http";
 import { InMemoryCache } from "apollo-cache-inmemory";
+import { persistCache } from "apollo-cache-persist";
 import {
   ApolloClient,
   // gql
@@ -19,6 +20,10 @@ const httpLink = createHttpLink({
 });
 
 const cache = new InMemoryCache();
+persistCache({
+  cache,
+  storage: window.localStorage,
+});
 
 // see resolvers.js!
 const client = new ApolloClient({
