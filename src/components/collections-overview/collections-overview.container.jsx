@@ -1,5 +1,6 @@
 import React from "react";
-import { Query } from "react-apollo";
+// import { Query } from "react-apollo";
+import { useQuery } from "react-apollo";
 import { gql } from "apollo-boost";
 
 import CollectionsOverview from "./collections-overview.component";
@@ -20,16 +21,24 @@ const GET_COLLECTIONS = gql`
   }
 `;
 
-const CollectionsOverviewContainer = () => (
-  <Query query={GET_COLLECTIONS}>
-    {({ loading, error, data }) => {
-      console.log({ loading });
-      console.log({ error });
-      console.log({ data });
-      if (loading) return <Spinner />;
-      return <CollectionsOverview collections={data.collections} />;
-    }}
-  </Query>
-);
+// const CollectionsOverviewContainer = () => (
+//   <Query query={GET_COLLECTIONS}>
+//     {({ loading, error, data }) => {
+//       console.log({ loading });
+//       console.log({ error });
+//       console.log({ data });
+//       if (loading) return <Spinner />;
+//       return <CollectionsOverview collections={data.collections} />;
+//     }}
+//   </Query>
+// );
+
+const CollectionsOverviewContainer = () => {
+  const { loading, error, data } = useQuery(GET_COLLECTIONS);
+  if (loading) return <Spinner />;
+  if (error) return;
+  const { collections } = data;
+  return <CollectionsOverview collections={collections} />;
+};
 
 export default CollectionsOverviewContainer;

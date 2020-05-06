@@ -1,6 +1,7 @@
 import React from "react";
 // import { Mutation } from "react-apollo";
-import { graphql } from "react-apollo";
+// import { graphql } from "react-apollo";
+import { useMutation } from "react-apollo";
 import { gql } from "apollo-boost";
 // import { flowRight } from "lodash";
 
@@ -25,12 +26,12 @@ const ADD_ITEM_TO_CART = gql`
 //   </Mutation>
 // );
 
-const CollectionItemContainer = ({ addItemToCart, ...props }) => (
-  <CollectionItem
-    {...props}
-    addItem={(item) => addItemToCart({ variables: { item } })}
-  ></CollectionItem>
-);
+// const CollectionItemContainer = ({ addItemToCart, ...props }) => (
+//   <CollectionItem
+//     {...props}
+//     addItem={(item) => addItemToCart({ variables: { item } })}
+//   ></CollectionItem>
+// );
 
 // export default flowRight(graphql(ADD_ITEM_TO_CART, { name: "addItemToCart" }))(
 //   CollectionItemContainer
@@ -38,6 +39,18 @@ const CollectionItemContainer = ({ addItemToCart, ...props }) => (
 
 // we don't need flowRight when not chaining multiple graphql calls to replace Query
 // and Mutation components - here graphql can be called like redux connect()()
-export default graphql(ADD_ITEM_TO_CART, { name: "addItemToCart" })(
-  CollectionItemContainer
-);
+// export default graphql(ADD_ITEM_TO_CART, { name: "addItemToCart" })(
+//   CollectionItemContainer
+// );
+
+const CollectionItemContainer = ({ ...props }) => {
+  const [addItemToCart] = useMutation(ADD_ITEM_TO_CART);
+  return (
+    <CollectionItem
+      {...props}
+      addItem={(item) => addItemToCart({ variables: { item } })}
+    ></CollectionItem>
+  );
+};
+
+export default CollectionItemContainer;

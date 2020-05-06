@@ -1,7 +1,8 @@
 import React from "react";
 // import { Query, Mutation } from "react-apollo";
-import { graphql } from "react-apollo";
-import { flowRight } from "lodash";
+import { useQuery, useMutation } from "react-apollo";
+// import { graphql } from "react-apollo";
+// import { flowRight } from "lodash";
 import { gql } from "apollo-boost";
 
 import CartIcon from "./cart-icon.component";
@@ -32,11 +33,21 @@ const GET_ITEM_COUNT = gql`
 // );
 
 // below is equivalent to above, but using flowRight with graphql function
-const CartIconContainer = ({ data: { itemCount }, toggleCartHidden }) => (
-  <CartIcon toggleCartHidden={toggleCartHidden} itemCount={itemCount} />
-);
+// const CartIconContainer = ({ data: { itemCount }, toggleCartHidden }) => (
+//   <CartIcon toggleCartHidden={toggleCartHidden} itemCount={itemCount} />
+// );
 
-export default flowRight(
-  graphql(GET_ITEM_COUNT),
-  graphql(TOGGLE_CART_HIDDEN, { name: "toggleCartHidden" })
-)(CartIconContainer);
+// export default flowRight(
+//   graphql(GET_ITEM_COUNT),
+//   graphql(TOGGLE_CART_HIDDEN, { name: "toggleCartHidden" })
+// )(CartIconContainer);
+
+const CartIconContainer = () => {
+  const { loading, error, data } = useQuery(GET_ITEM_COUNT);
+  const [toggleCartHidden] = useMutation(TOGGLE_CART_HIDDEN);
+  if (loading || error) return;
+  const { itemCount } = data;
+  return <CartIcon toggleCartHidden={toggleCartHidden} itemCount={itemCount} />;
+};
+
+export default CartIconContainer;

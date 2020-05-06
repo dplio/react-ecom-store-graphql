@@ -1,7 +1,7 @@
 import React from "react";
-import { graphql } from "react-apollo";
+import { useMutation } from "react-apollo";
 import { gql } from "apollo-boost";
-import { flowRight } from "lodash";
+// import { flowRight } from "lodash";
 
 import CheckoutItem from "./checkout-item.component";
 
@@ -23,22 +23,38 @@ const CLEAR_ITEM_FROM_CART = gql`
   }
 `;
 
-const CollectionItemContainer = ({
-  addItemToCart,
-  removeItemFromCart,
-  clearItemFromCart,
-  ...otherProps
-}) => (
-  <CheckoutItem
-    {...otherProps}
-    addItem={(item) => addItemToCart({ variables: { item } })}
-    removeItem={(item) => removeItemFromCart({ variables: { item } })}
-    clearItem={(item) => clearItemFromCart({ variables: { item } })}
-  />
-);
+// const CollectionItemContainer = ({
+//   addItemToCart,
+//   removeItemFromCart,
+//   clearItemFromCart,
+//   ...otherProps
+// }) => (
+//   <CheckoutItem
+//     {...otherProps}
+//     addItem={(item) => addItemToCart({ variables: { item } })}
+//     removeItem={(item) => removeItemFromCart({ variables: { item } })}
+//     clearItem={(item) => clearItemFromCart({ variables: { item } })}
+//   />
+// );
 
-export default flowRight(
-  graphql(ADD_ITEM_TO_CART, { name: "addItemToCart" }),
-  graphql(REMOVE_ITEM_FROM_CART, { name: "removeItemFromCart" }),
-  graphql(CLEAR_ITEM_FROM_CART, { name: "clearItemFromCart" })
-)(CollectionItemContainer);
+// export default flowRight(
+//   graphql(ADD_ITEM_TO_CART, { name: "addItemToCart" }),
+//   graphql(REMOVE_ITEM_FROM_CART, { name: "removeItemFromCart" }),
+//   graphql(CLEAR_ITEM_FROM_CART, { name: "clearItemFromCart" })
+// )(CollectionItemContainer);
+
+const CollectionItemContainer = ({ ...props }) => {
+  const [addItemToCart] = useMutation(ADD_ITEM_TO_CART);
+  const [removeItemFromCart] = useMutation(REMOVE_ITEM_FROM_CART);
+  const [clearItemFromCart] = useMutation(CLEAR_ITEM_FROM_CART);
+  return (
+    <CheckoutItem
+      {...props}
+      addItem={(item) => addItemToCart({ variables: { item } })}
+      removeItem={(item) => removeItemFromCart({ variables: { item } })}
+      clearItem={(item) => clearItemFromCart({ variables: { item } })}
+    />
+  );
+};
+
+export default CollectionItemContainer;
